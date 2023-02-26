@@ -22,6 +22,7 @@ package me.zhengjie.modules.system.service.dto;
  **/
 public class UserLoginDto extends UserDto {
 
+    /*两个不同的password*/
     private String password;
 
     private Boolean isAdmin;

@@ -29,6 +29,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
+ * 这个Service 提供从数据库查询需要登录的用的信息
  * @author Zheng Jie
  * @date 2018-11-22
  */

@@ -75,12 +75,13 @@ public class AuthorizationController {
     @ApiOperation("登录授权")
     @AnonymousPostMapping(value = "/login")
     public ResponseEntity<Object> login(@Validated @RequestBody AuthUserDto authUser, HttpServletRequest request) throws Exception {
-        // 密码解密
-        String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
+        // 密码解密  为了调试方便 这里注释掉对密码的加解密
+        // String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
+         String password =authUser.getPassword();
         // 查询验证码
         String code = (String) redisUtils.get(authUser.getUuid());
-        // 清除验证码
-        redisUtils.del(authUser.getUuid());
+        // 清除验证码 为了调试方便 不清除验证码
+        //redisUtils.del(authUser.getUuid());
         if (StringUtils.isBlank(code)) {
             throw new BadRequestException("验证码不存在或已过期");
         }
@@ -90,6 +91,7 @@ public class AuthorizationController {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(authUser.getUsername(), password);
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        //使用 threadLocal 简单存储了用户命
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // 生成令牌与第三方系统获取令牌方式
         // UserDetails userDetails = userDetailsService.loadUserByUsername(userInfo.getUsername());

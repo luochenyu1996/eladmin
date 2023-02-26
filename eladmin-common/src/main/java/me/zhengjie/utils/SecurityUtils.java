@@ -37,6 +37,7 @@ import java.util.List;
 public class SecurityUtils {
 
     /**
+     * 根据用户名从数据库中进行获取
      * 获取当前登录的用户
      * @return UserDetails
      */
