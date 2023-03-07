@@ -18,6 +18,7 @@ package me.zhengjie.annotation;
 import java.lang.annotation.*;
 
 /**
+ * SpringSecurityConfig 类中使该注解生效
  * @author jacky
  *  用于标记匿名访问方法
  */

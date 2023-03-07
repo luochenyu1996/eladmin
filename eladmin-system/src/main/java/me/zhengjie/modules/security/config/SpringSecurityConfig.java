@@ -76,8 +76,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         // 搜寻匿名标记 url： @AnonymousAccess
         RequestMappingHandlerMapping requestMappingHandlerMapping = (RequestMappingHandlerMapping) applicationContext.getBean("requestMappingHandlerMapping");
+         // 获取到所有的映射controller 中的方法
         Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = requestMappingHandlerMapping.getHandlerMethods();
-        // 获取匿名标记
+        // 获取匿名标记   -》 解析出含有自定义注解的方法
         Map<String, Set<String>> anonymousUrls = getAnonymousUrl(handlerMethodMap);
         httpSecurity
                 // 禁用 CSRF
@@ -141,6 +142,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return new TokenConfigurer(tokenProvider, properties, onlineUserService, userCacheManager);
     }
 
+    /**
+     * 对标注有AnonymousAccess 的类进行获取和分类
+     *
+     */
     private Map<String, Set<String>> getAnonymousUrl(Map<RequestMappingInfo, HandlerMethod> handlerMethodMap) {
         Map<String, Set<String>> anonymousUrls = new HashMap<>(8);
         Set<String> get = new HashSet<>();

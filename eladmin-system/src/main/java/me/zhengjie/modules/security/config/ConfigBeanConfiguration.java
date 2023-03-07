@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * security 相关 bean 配置的地方
  * @apiNote 配置文件转换Pojo类的 统一配置 类
  * @author: liaojinlong
  * @date: 2020/6/10 19:04

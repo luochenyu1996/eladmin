@@ -76,6 +76,7 @@ public class AuthorizationController {
     @AnonymousPostMapping(value = "/login")
     public ResponseEntity<Object> login(@Validated @RequestBody AuthUserDto authUser, HttpServletRequest request) throws Exception {
         // 密码解密  为了调试方便 这里注释掉对密码的加解密
+        // 这行代码和jwt是不相关的， 只是对用户的密码 进行加解密
         // String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
          String password =authUser.getPassword();
         // 查询验证码
@@ -98,6 +99,14 @@ public class AuthorizationController {
         // Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         // SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = tokenProvider.createToken(authentication);
+        /**
+         * 生成的token 串形式
+         * eyJhbGciOiJIUzUxMiJ9.
+         * eyJqdGkiOiI3ODZjZGI0NDhhN2I0MzQ4YjhhZTMwM2RiMGFmNjA3NyIsInVzZXIiOiJhZG1pbiIsInN1YiI6ImFkbWluIn0.
+         * HEwJWLm2VF5vcDcHqDw8eMDZKllTVQIfT5F-U9vaBVk_dpOtf3piUOr3kwa1km5FaS8wZ0SqwaNwdPoQ10XZgg
+         */
+        System.out.println("token:"+token);
+
         final JwtUserDto jwtUserDto = (JwtUserDto) authentication.getPrincipal();
         // 保存在线信息
         onlineUserService.save(jwtUserDto, token, request);
@@ -119,6 +128,11 @@ public class AuthorizationController {
         return ResponseEntity.ok(SecurityUtils.getCurrentUser());
     }
 
+
+    /**
+     * @AnonymousGetMapping  封装了  @RequestMapping  和  @AnonymousAccess
+     *
+     */
     @ApiOperation("获取验证码")
     @AnonymousGetMapping(value = "/code")
     public ResponseEntity<Object> getCode() {

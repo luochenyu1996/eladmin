@@ -34,6 +34,8 @@ public class LoginProperties {
 
     /**
      * 账号单用户 登录
+     *
+     * 默认单账户登陆
      */
     private boolean singleLogin = false;
 

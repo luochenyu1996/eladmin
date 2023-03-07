@@ -52,9 +52,20 @@ public class TokenProvider implements InitializingBean {
         this.redisUtils = redisUtils;
     }
 
+
+    /**
+     *  properties
+     *  redisUtils
+     *  这两属性配置完成后，对下方两个属性进行配置
+     *
+     *   这里jwt 生成器的构建，只使用了一个 88 位的  base64串
+     */
     @Override
     public void afterPropertiesSet() {
         byte[] keyBytes = Decoders.BASE64.decode(properties.getBase64Secret());
+        System.out.println("获取base64 编码串");
+        System.out.println(properties.getBase64Secret());
+
         Key key = Keys.hmacShaKeyFor(keyBytes);
         jwtParser = Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -66,7 +77,7 @@ public class TokenProvider implements InitializingBean {
     /**
      * 创建Token 设置永不过期，
      * Token 的时间有效性转到Redis 维护
-     *
+     * 使用uuid key
      * @param authentication /
      * @return /
      */
@@ -74,7 +85,9 @@ public class TokenProvider implements InitializingBean {
         return jwtBuilder
                 // 加入ID确保生成的 Token 都不一致
                 .setId(IdUtil.simpleUUID())
+                // claim ->{ key: user ,  value:  userName }
                 .claim(AUTHORITIES_KEY, authentication.getName())
+                // 用于表明该jwt的主体
                 .setSubject(authentication.getName())
                 .compact();
     }
